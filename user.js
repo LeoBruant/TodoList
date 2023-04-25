@@ -1,13 +1,10 @@
-class User{
-
+class User {
     constructor(firstname,lastname,email,password,birthday){
-        
         this.firstname = firstname
         this.lastname = lastname
         this.email = email
         this.password = password
         this.birthday = birthday
-
     }
     
     isValidPassword(password) {
@@ -27,7 +24,6 @@ class User{
         const age = Math.floor(differenceMs / 31536000000);
         return age;
     }
-
 
     isValid(User){
         if(User.firstname != null 
