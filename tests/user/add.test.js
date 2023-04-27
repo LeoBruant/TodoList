@@ -1,35 +1,44 @@
 import { describe, expect, it } from 'vitest'
 import { User } from '../../entity/user'
+import { Item } from '../../entity/item'
 
 // Set base birtdate
 const birthdate = new Date()
 birthdate.setFullYear(new Date().getFullYear() - 13)
 
 // Set base todolist item
-const todolistItem = {
-  name: 'Item',
-  content: 'Content',
-  date: new Date()
-}
+let todolistItem
 
 // Set base user
-const user = new User(birthdate, 'johndoe@gmail.com', 'John', 'Doe', 'Password1')
+let user
+
+const reset = () => {
+  todolistItem = new Item('Content', new Date('01/01/2000'), 'Item')
+  user = new User(birthdate, 'johndoe@gmail.com', 'John', 'Doe', 'Password1')
+}
 
 /**
  * Status code 200
  */
 
 it('One item', () => {
+  reset()
+
   expect(user.add(todolistItem)).toEqual(200)
 })
 
 it('Max items', () => {
-  for (let i = 0; i < 9; i++) {
-    todolistItem.name = `Item ${i}`
+  reset()
 
+  for (let i = 0; i < 9; i++) {
+    user.todoLists[0].push(todolistItem)
   }
 
-  expect(user.add(todolistItem)).toEqual(200)
+  expect(user.add(new Item(
+    todolistItem.content,
+    new Date(Date.parse(todolistItem.date) + 45 * 60 * 1000),
+    'Last item'
+  ))).toEqual(200)
 })
 
 /**
@@ -37,6 +46,8 @@ it('Max items', () => {
  */
 
 it('Item with content too long', () => {
+  reset()
+
   todolistItem.content = `
     aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -55,23 +66,35 @@ it('Item with content too long', () => {
 })
 
 it('2 items with same name', () => {
+  reset()
+
   user.add(todolistItem)
-  expect(user.add(todolistItem)).toEqual(422)
+
+  expect(user.add(new Item(
+    todolistItem.content,
+    new Date(Date.parse(todolistItem.date) + 45 * 60 * 1000),
+    todolistItem.name
+  ))).toEqual(422)
 })
 
 it('Too much items', () => {
+  reset()
+
   for (let i = 0; i < 10; i++) {
-    todolistItem.name = `Item ${i}`
-    user.add(todolistItem)
+    user.todoLists[0].push(todolistItem)
   }
 
-  expect(user.add(todolistItem)).toEqual(422)
+  expect(user.add(new Item(
+    todolistItem.content,
+    new Date(Date.parse(todolistItem.date) + 45 * 60 * 1000),
+    'Item over limit'
+  ))).toEqual(422)
 })
 
-it('Adding to fast', () => {
+it('Adding too fast', () => {
+  reset()
+
   user.add(todolistItem)
 
-  todolistItem.date.setMinutes(todolistItem.date.getMinutes() + 10)
-
-  expect(user.add(todolistItem)).toEqual(422)
+  expect(user.add(new Item(todolistItem.content, todolistItem.date, 'Item added too fast'))).toEqual(422)
 })

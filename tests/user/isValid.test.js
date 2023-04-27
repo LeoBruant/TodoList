@@ -6,13 +6,19 @@ const birthdate = new Date()
 birthdate.setFullYear(new Date().getFullYear() - 14)
 
 // Set base user
-const user = new User(birthdate, 'johndoe@gmail.com', 'John', 'Doe', 'Password1')
+let user
+
+const reset = () => {
+  user = new User(birthdate, 'johndoe@gmail.com', 'John', 'Doe', 'Password1')
+}
 
 /**
  * Valid tests
  */
 
 it('success', () => {
+  reset()
+
   expect(user.isValid()).toBe(true)
 })
 
@@ -22,6 +28,8 @@ it('success', () => {
 
 // Birthdate
 describe('Birthdate', () => {
+  reset()
+
   it('Age under 13', () => {
     user.birthdate = new Date()
 
@@ -31,6 +39,8 @@ describe('Birthdate', () => {
 
 // Email
 describe('Email', () => {
+  reset()
+
   it('Incorrect format', () => {
     user.email = 'johndoe@gmail'
 
@@ -40,11 +50,15 @@ describe('Email', () => {
 
 // Firstname
 describe('Firstname', () => {
+  reset()
+
   it('Empty', () => {
     user.firstname = ''
 
     expect(user.isValid()).toBe(false)
   })
+
+  reset()
 
   it('Null', () => {
     user.firstname = null
@@ -55,11 +69,15 @@ describe('Firstname', () => {
 
 // Lastname
 describe('Lastname', () => {
+  reset()
+
   it('Empty', () => {
     user.lastname = ''
 
     expect(user.isValid()).toBe(false)
   })
+
+  reset()
 
   it('Null', () => {
     user.lastname = null
@@ -70,11 +88,15 @@ describe('Lastname', () => {
 
 // Password
 describe('Password', () => {
+  reset()
+
   it('Too short', () => {
     user.password = 'aA1'
 
     expect(user.isValid()).toBe(false)
   })
+
+  reset()
 
   it('Too long', () => {
     user.password = 'Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1'
@@ -82,17 +104,23 @@ describe('Password', () => {
     expect(user.isValid()).toBe(false)
   })
 
+  reset()
+
   it('No uppercase', () => {
     user.password = 'password1'
 
     expect(user.isValid()).toBe(false)
   })
 
+  reset()
+
   it('No lowercase', () => {
     user.password = 'PASSWORD1'
 
     expect(user.isValid()).toBe(false)
   })
+
+  reset()
 
   it('No number', () => {
     user.password = 'Password'
