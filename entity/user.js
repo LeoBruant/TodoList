@@ -5,27 +5,15 @@ export class User {
     this.firstname = firstname
     this.lastname = lastname
     this.password = password
-    this.todoLists = []
+    this.todoLists = [[]]
   }
 
   add(item) {
-    if (
-      (item.content.length > 1000) ||
-      (this.todoLists.length && this.todoLists[0].length >= 10) ||
-      (
-        this.todoLists.length &&
-        this.todoLists[0].length &&
-        Date.parse(Date.now()) < Date.parse(this.todoLists[0][this.todoLists[0].length - 1].date) + 30 * 60 * 1000
-      )
-    ) {
+    if (!item.isValid(this.todoLists[this.todoLists.length - 1])) {
       return 422
     }
 
-    if (this.todoLists.length === 0) {
-      this.todoLists.push([item])
-    } else {
-      this.todoLists[this.todoLists.length - 1].push(item)
-    }
+    this.todoLists[this.todoLists.length - 1].push(item)
 
     return 200
   }

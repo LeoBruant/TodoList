@@ -1,17 +1,26 @@
-class Item {
-  constructor(name,content,date){
-      this.name = name
+export class Item {
+  constructor(content, date, name){
       this.content = content
       this.date = date
+      this.name = name
   }
-        
-  isValid(todoLists){
+
+  isValid(todoList){
     return (
-      (this.content.length <= 1000) ||
+      todoList.length < 10
+      &&
+      this.content.length <= 1000
+      &&
       (
-        todoLists.length &&
-        todoLists[0].length &&
-        Date.parse(Date.now()) < Date.parse(todoLists[0][todoLists[0].length - 1].date) + 30 * 60 * 1000
+        !todoList.length ||
+        todoList.length &&
+        this.name !== todoList[todoList.length - 1].name
+      )
+      &&
+      (
+        !todoList.length ||
+        todoList.length &&
+        Date.parse(this.date) >= Date.parse(todoList[todoList.length - 1].date) + 30 * 60 * 1000
       )
     )
   }

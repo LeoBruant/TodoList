@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- install [yarn](https://yarnpkg.com/) on your machine
+- install [yarn](https://yarnpkg.com/) locally
 
 ---
 
@@ -17,5 +17,5 @@ yarn install
 ## Run tests
 
 ```zsh
-yarn vitest run
+yarn vitest --ui
 ```
