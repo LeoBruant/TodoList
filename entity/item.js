@@ -11,11 +11,7 @@ export class Item {
       &&
       this.content.length <= 1000
       &&
-      (
-        !todoList.length ||
-        todoList.length &&
-        this.name !== todoList[todoList.length - 1].name
-      )
+      !todoList.map(item => item.name).includes(this.name)
       &&
       (
         !todoList.length ||

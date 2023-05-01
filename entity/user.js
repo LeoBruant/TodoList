@@ -1,3 +1,5 @@
+import { send } from "./emailSenderService"
+
 export class User {
   constructor(birthdate, email, firstname, lastname, password){
     this.birthdate = birthdate
@@ -15,7 +17,11 @@ export class User {
 
     this.todoLists[this.todoLists.length - 1].push(item)
 
-    return 200
+    if(this.todoLists[this.todoLists.length - 1].length === 8) {
+      return send()
+    }
+
+    return 201
   }
 
   isValid(){
@@ -29,7 +35,7 @@ export class User {
   }
 
   isValidAge() {
-    if (this.birthdate > new Date()) {
+    if (!this.birthdate || this.birthdate > new Date()) {
       return false
     }
 
